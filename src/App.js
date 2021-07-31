@@ -16,10 +16,9 @@ class BooksApp extends React.Component {
     };
 
     //When component mounted assign all the books from the API to the bookList state.
-    componentDidMount() {
-        BooksAPI.getAll().then((bookList) => {
-            this.setState({ bookList });
-        });
+    async componentDidMount() {
+        const userBooks = await BooksAPI.getAll();
+        this.setState({ bookList: userBooks });
     }
 
     /**
@@ -32,22 +31,17 @@ class BooksApp extends React.Component {
         let found = false;
         tempBookList.forEach((tempBook) => {
             if (tempBook.title === book.title) {
-                console.log("title equals");
                 tempBook.shelf = shelf;
                 found = true;
             }
         });
 
         if (!found) {
-            console.log("title not equal");
-
             book.shelf = shelf;
             tempBookList.push(book);
         }
 
         this.setState({ bookList: tempBookList });
-        console.log(`${book.id} + ${shelf}`);
-
         BooksAPI.update(book, shelf);
     };
 
